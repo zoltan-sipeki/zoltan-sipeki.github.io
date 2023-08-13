@@ -16,6 +16,7 @@ export class Phoenix {
         this.yAcc = 0;
         this.width = 50;
         this.height = 50;
+        this.canJump = false;
         this.isJumping = false;
         this.isDead = false;
         this.isFalling = false;
@@ -35,8 +36,9 @@ export class Phoenix {
             this.y = this.ground - this.height;
         }
         else if (this.isFlying || this.isFalling) {
+            this.canJump = this.yVel > 0
             this.updatePhysics(delta);
-            this.setJumpingState();
+            this.isJumping = false;
         }
         else if (this.isReborn) {
             this.y -= 0.3 * delta;
@@ -51,15 +53,18 @@ export class Phoenix {
     }
 
     updatePhysics(delta) {
+        if (this.isJumping) {
+            this.yAcc += JUMP_FORCE;
+        }
         this.yAcc += GRAVITY;
-        this.yVel += this.yAcc * delta;
-        this.y += this.yVel;
+        this.yVel += this.yAcc;
+        this.y += this.yVel * delta;
         this.yAcc = 0;
     }
 
     jump() {
-        if (this.isFlying && !this.isJumping) {
-            this.yAcc += JUMP_FORCE;
+        if (this.isFlying && this.canJump) {
+            this.isJumping = true;
         }
     }
     
@@ -67,15 +72,6 @@ export class Phoenix {
         if (!this.isDead) {
             this.hitTheGround = false;
             this.isDead = true;
-        }
-    }
-
-    setJumpingState() {
-        if (this.yVel < 0) {
-            this.isJumping = true;
-        }
-        else {
-            this.isJumping = false;
         }
     }
 

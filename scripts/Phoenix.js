@@ -1,7 +1,7 @@
 import { isPixelTransparent } from "./PhoenixSprite.js";
 import { FlyAnimation } from "./FlyAnimation.js";
 import { DeathAnimation } from "./DeathAnimation.js";
-import { RebirthAnimation } from "./ReBirthAnimation.js";
+import { RebirthAnimation } from "./RebirthAnimation.js";
 
 const GRAVITY = 0.01;
 const JUMP_FORCE = -0.4;

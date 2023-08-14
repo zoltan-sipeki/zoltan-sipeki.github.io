@@ -3,8 +3,8 @@ import { FlyAnimation } from "./FlyAnimation.js";
 import { DeathAnimation } from "./DeathAnimation.js";
 import { RebirthAnimation } from "./RebirthAnimation.js";
 
-const GRAVITY = 0.01;
-const JUMP_FORCE = -0.4;
+const GRAVITY = 0.00125;
+const JUMP_FORCE = -0.03;
 
 export class Phoenix {
     constructor(x, y, screenHeight) {
@@ -57,7 +57,7 @@ export class Phoenix {
             this.yAcc += JUMP_FORCE;
         }
         this.yAcc += GRAVITY;
-        this.yVel += this.yAcc;
+        this.yVel += this.yAcc * delta;
         this.y += this.yVel * delta;
         this.yAcc = 0;
     }

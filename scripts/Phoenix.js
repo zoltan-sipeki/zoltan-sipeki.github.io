@@ -35,10 +35,13 @@ export class Phoenix {
         if (this.hitTheGround) {
             this.y = this.ground - this.height;
         }
-        else if (this.isFlying || this.isFalling) {
+        else if (this.isFlying) {
             this.canJump = this.yVel > 0
             this.updatePhysics(delta);
             this.isJumping = false;
+        }
+        else if (this.isFalling) {
+            this.updatePhysics(delta);
         }
         else if (this.isReborn) {
             this.y -= 0.3 * delta;

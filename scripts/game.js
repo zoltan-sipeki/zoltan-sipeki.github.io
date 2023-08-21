@@ -4,6 +4,7 @@ import { Background } from "./Background.js";
 
 const WIDTH = 800;
 export const HEIGHT = WIDTH * 9 / 16;
+const MAX_DELTA = 100 / 6;
 
 let lastTime = -1;
 
@@ -17,6 +18,7 @@ let gameOver = false;
 let score = 0;
 let replays = 0;
 let paused = true;
+let accumTime = 0;
 
 export function setup() {
     setupCanvas();
@@ -39,21 +41,28 @@ function update(time) {
         drawPause();
     }
     else {
-        if (isControlEnabled()) {
-            background.update(delta);
-            updatePipes(delta);
-            updateScore();
-            checkCollisions();
+        accumTime += delta;
+        while (accumTime >= MAX_DELTA) {
+            phoenix.update(MAX_DELTA);
+            
+            if (isControlEnabled()) {
+                background.update(MAX_DELTA);
+                updatePipes(MAX_DELTA);
+                updateScore();
+                checkCollisions();
+            }
+
+            accumTime -= MAX_DELTA;
         }
-        else if (!gameOver && phoenix.isDead) {
+        
+        if (!gameOver && phoenix.isDead) {
             gameOver = true;
             ++replays;
         }
 
-        phoenix.update(delta);
 
         background.draw(graphics);
-        drawPipes(graphics);
+        drawPipes();
         phoenix.draw(graphics);
         drawScore();
     }
@@ -143,7 +152,7 @@ function updatePipes(delta) {
     }
 }
 
-function drawPipes(graphics) {
+function drawPipes() {
     for (let i = 0; i < pipes.length; ++i) {
         pipes[i].draw(graphics);
     }

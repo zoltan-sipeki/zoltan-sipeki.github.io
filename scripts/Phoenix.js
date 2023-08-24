@@ -132,7 +132,7 @@ export class Phoenix {
             const right = this.x + this.width;
             const bottom = this.y + this.height;
 
-            if ((right > boxes[i].left && right < boxes[i].right || left > boxes[i].left && left < boxes[i].right) && (top > boxes[i].top && top < boxes[i].bottom || bottom > boxes[i].top && bottom < boxes[i].bottom)) {
+            if (left <= boxes[i].right && right >= boxes[i].left && top <= boxes[i].bottom && bottom >= boxes[i].top) {
                 if (this.pixelCollision(boxes[i])) {
                     return true;
                 }

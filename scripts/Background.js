@@ -8,15 +8,15 @@ export class Background {
         this.height = screenHeight;
     }
 
-    update(delta) {
+    update(delta, world) {
         this.x -= delta * SPEED;
-        if (this.x <= -this.screenWidth) {
+        if (this.x <= -this.width) {
             this.x = 0;
         }
     }
 
-    draw(graphics) {
+    draw(graphics, world) {
         graphics.drawImage(this.image, this.x, 0, this.width, this.height);
-        graphics.drawImage(this.image, this.x + this.width - 1, 0, this.width, this.height);
+        graphics.drawImage(this.image, this.x + this.width, 0, this.width, this.height);
     }
 }

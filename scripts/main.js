@@ -1,8 +1,8 @@
-import { setup, run } from "./game.js";
+import { Game } from "./Game.js";
 
 (function main() {
-    setup();
-    run();
+    const game = new Game();
+    game.run();
 })();
 
 

@@ -1,5 +1,3 @@
-import { HEIGHT as SCREEN_HEIGHT, getLastPipeXPosition } from "./game.js";
-
 const SPEED = 0.1;
 const HORIZONTAL_GAP = 140;
 const VERTICAL_GAP = 130;
@@ -10,31 +8,39 @@ const PIPE_SPRITE = document.querySelector("#pipe");
 export class Pipe {
     constructor(x) {
         this.topY = 0;
-        this.reset(x);
     }
 
     get right() {
         return this.x + WIDTH;
     }
 
-    reset(x) {
+    reset(x, screenHeight) {
         this.x = x;
         this.behindPhoenix = false;
-        this.topHeight = SCREEN_HEIGHT / 4 + Math.floor(Math.random() * (2 * SCREEN_HEIGHT / 4 - VERTICAL_GAP));
+        this.topHeight = screenHeight / 4 + Math.floor(Math.random() * (2 * screenHeight / 4 - VERTICAL_GAP));
         this.topY = this.topHeight - HEIGHT;
         this.bottomY = this.topHeight + VERTICAL_GAP;
-        this.bottomHeight = SCREEN_HEIGHT - this.topHeight - VERTICAL_GAP;
+        this.bottomHeight = screenHeight - this.topHeight - VERTICAL_GAP;
     }
 
-    update(delta) {
+    update(delta, world) {
         this.x -= delta * SPEED;
         if (this.x + WIDTH < 0) {
-            const x = getLastPipeXPosition() + HORIZONTAL_GAP + WIDTH;
-            this.reset(x);
+            const x = this.getLastPipeXPosition(world.pipes) + HORIZONTAL_GAP + WIDTH;
+            this.reset(x, world.height);
         }
     }
 
-    draw(graphics) {
+    getLastPipeXPosition(pipes) {
+        let x = -1;
+        for (let i = 0; i < pipes.length; ++i) {
+            x = Math.max(x, pipes[i].x);
+        }
+    
+        return x;
+    }
+
+    draw(graphics, world) {
         graphics.save();
         graphics.translate(this.x + WIDTH / 2, 0);
         graphics.rotate(Math.PI);
@@ -52,18 +58,19 @@ export class Pipe {
             right: this.x + WIDTH
         }, { 
             top: this.bottomY, 
-            bottom: SCREEN_HEIGHT, 
+            bottom: this.bottomY + this.bottomHeight, 
             left: this.x, 
             right: this.x + WIDTH
         }];
     }
 
-    static createPipes(screenWidth) {
+    static createPipes(world) {
         const pipes = [];
-        let x = screenWidth / 2;
-        const pipeCount = Math.ceil(screenWidth / (HORIZONTAL_GAP + WIDTH)) + 1;
+        let x = world.width / 2;
+        const pipeCount = Math.ceil(world.width / (HORIZONTAL_GAP + WIDTH)) + 1;
         for (let i = 0; i < pipeCount; ++i) {
             const pipe = new Pipe(x);
+            pipe.reset(x, world.height);
             pipes.push(pipe);
             x +=  HORIZONTAL_GAP + WIDTH;
         }

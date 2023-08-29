@@ -17,6 +17,6 @@ export class Background {
 
     draw(graphics, world) {
         graphics.drawImage(this.image, this.x, 0, this.width, this.height);
-        graphics.drawImage(this.image, this.x + this.width, 0, this.width, this.height);
+        graphics.drawImage(this.image, this.x + this.width - 1, 0, this.width, this.height);
     }
 }
